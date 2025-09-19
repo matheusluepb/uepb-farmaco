@@ -35,5 +35,6 @@ function displayCollectionResults(results) {
 	// $w("#button1").label = "Clique aqui!";
 
 	// Clique em "Executar" ou visualize seu site para executar seu código
+// lembrar de colocar a função do back para concatenar com o front
 
 });
