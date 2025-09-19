@@ -1,0 +1,39 @@
+// Guia de API: https://www.wix.com/velo/reference/api-overview/introduction
+
+$w.onReady(function () {import wixData from 'wix-data';
+
+$w.onReady(function () {
+    $w("#searchButton").onClick(() => {
+        searchCollection($w("#searchInput").value);
+    });
+});
+
+async function searchCollection(query) {
+    try {
+        const results = await wixData.query("Medicamentos")
+            .contains("title", query)
+            .or(wixData.query("Medicamentos").contains("description", query))
+            .find();
+            
+        displayCollectionResults(results);
+    } catch (error) {
+        console.error("Erro na busca:", error);
+    }
+}
+
+function displayCollectionResults(results) {
+    $w("#resultsRepeater").data = results.items;
+    // Configurar o repeater como no exemplo anterior
+}
+
+	// Escreva seu código JavaScript aqui usando o API de framework do Velo
+
+	// Exiba hello world:
+	// console.log("Hello world!");
+
+	// Chame funções em elementos da página, por exemplo:
+	// $w("#button1").label = "Clique aqui!";
+
+	// Clique em "Executar" ou visualize seu site para executar seu código
+
+});
