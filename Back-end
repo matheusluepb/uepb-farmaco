@@ -1,3 +1,4 @@
 \\ aqui será a parte do servidor
 \\ função da tradução para a lingua portuguesa (https://open.fda.gov/apis/drug/drugsfda/searchable-fields/) traduzir do ingles para o portugues e interagir com o front.
 \\função para cada medicamento, a fim de cruzar os dados, para identificar se tem interações e reações adversas, no minimo 2 e no máximo ilimitados o numero de comparações.
+\\função para comparar cada alimento com os medicamentos, a fim de verificar se possui interações e reações adversas, no minimo 2 e no máximo ilimitados o numero de comparações.
