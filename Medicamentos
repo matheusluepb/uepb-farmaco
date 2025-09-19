@@ -37,4 +37,6 @@ function displayCollectionResults(results) {
 	// Clique em "Executar" ou visualize seu site para executar seu código
 // lembrar de colocar a função do back para concatenar com o front
 
+// esse é o site do front do wix https://dev.wix.com/docs/velo/velo-only-apis/wix-animations-frontend/introduction
+
 });
