@@ -3,3 +3,9 @@
 \\função para cada medicamento, a fim de cruzar os dados, para identificar se tem interações e reações adversas, no minimo 2 e no máximo ilimitados o numero de comparações.
 \\função para comparar cada alimento com os medicamentos, a fim de verificar se possui interações e reações adversas, no minimo 2 e no máximo ilimitados o numero de comparações.
 \\ função para concatenar com o front-end.
+
+\\ EXEMPLOS DA FUNÇÃO
+import { getPackageConfig } from "wix-configs-backend";
+
+\\ aqui é o site para fazer o back https://dev.wix.com/docs/velo/velo-only-apis/wix-configs-backend/introduction
+
