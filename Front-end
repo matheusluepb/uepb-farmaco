@@ -1,1 +1,92 @@
+// Código na sua página (ex: "Página de Busca")
 
+import wixData from 'wix-data';
+import wixLocation from 'wix-location';
+
+let debounceTimer;
+
+$w.onReady(function () {
+    // Configura eventos de busca
+    $w("#searchButton").onClick(searchPages);
+    $w("#searchInput").onKeyPress((event) => {
+        if (event.key === "Enter") {
+            searchPages();
+        }
+    });
+
+    // Usa um timer (debounce) para evitar múltiplas buscas enquanto o usuário digita
+    $w("#searchInput").onInput(() => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(searchPages, 500); // Espera 500ms para o usuário parar de digitar
+    });
+});
+
+async function searchPages() {
+    const searchTerm = $w("#searchInput").value.toLowerCase().trim();
+    
+    if (!searchTerm) {
+        $w("#resultsText").text = "Digite um termo para buscar";
+        $w("#resultsRepeater").data = [];
+        return;
+    }
+
+    try {
+        // Busca em todas as páginas indexadas
+        const results = await wixData.query("PaginasIndex")
+            .contains("conteudo", searchTerm)
+            .or(wixData.query("PaginasIndex").contains("titulo", searchTerm))
+            .find();
+
+        displayPageResults(results.items, searchTerm);
+
+    } catch (error) {
+        console.error("Erro na busca:", error);
+        $w("#resultsText").text = "Erro ao buscar páginas";
+    }
+}
+
+function displayPageResults(pages, searchTerm) {
+    if (pages.length === 0) {
+        $w("#resultsText").text = `Nenhuma página encontrada com "${searchTerm}"`;
+        $w("#resultsRepeater").data = [];
+        return;
+    }
+
+    $w("#resultsText").text = `${pages.length} páginas encontradas:`;
+    
+    // Destaca o termo buscado nos resultados
+    const formattedResults = pages.map(page => {
+        return {
+            ...page,
+            highlightedContent: highlightTerm(page.conteudo, searchTerm),
+            highlightedTitle: highlightTerm(page.titulo, searchTerm)
+        };
+    });
+
+    $w("#resultsRepeater").data = formattedResults;
+    
+    $w("#resultsRepeater").onItemReady(($item, itemData) => {
+        $item("#pageTitle").html = itemData.highlightedTitle;
+        $item("#pageExcerpt").html = getExcerpt(itemData.highlightedContent, 150);
+        
+        // Ação de clique para ir para a página
+        $item("#pageLink").onClick(() => {
+            wixLocation.to(itemData.url);
+        });
+    });
+}
+
+// Função para destacar o termo buscado
+function highlightTerm(text, term) {
+    if (!text) return "";
+    const regex = new RegExp(`(${term})`, "gi");
+    return text.replace(regex, '<span class="highlight">$1</span>');
+}
+
+// Função para criar um excerto do conteúdo
+function getExcerpt(text, maxLength) {
+    if (!text) return "";
+    // Remove tags HTML antes de criar o excerto
+    const cleanText = text.replace(/<[^>]*>/g, '');
+    return cleanText.length > maxLength ? cleanText.substring(0, maxLength) + "..." : cleanText;
+}
